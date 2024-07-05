@@ -1,0 +1,11 @@
+.main-class {
+  display: flex;
+}
+
+.content {
+  width: 100%;
+}
+
+.sideBar {
+  min-height: 550px;
+}
