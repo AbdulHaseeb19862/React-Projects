@@ -3,6 +3,7 @@ import { createContext, useReducer } from "react";
 export const PostList = createContext({
   postList: [],
   addPost: () => {},
+  addInitialPosts: () => {},
   deletePost: () => {},
 });
 
@@ -12,34 +13,16 @@ function postListReducer(currentState, action) {
     newPostList = currentState.filter(
       (post) => post.id !== action.payload.postId
     );
+  } else if (action.type === "Add_Initial_Posts") {
+    newPostList = action.payload.posts;
   } else if (action.type === "Add_Post") {
     newPostList = [action.payload, ...currentState];
   }
   return newPostList;
 }
 
-const values = [
-  {
-    id: "1",
-    title: "Going To Peshawar",
-    body: "Peshawar is a historic city in Pakistan, known for its rich culture, ancient architecture, and vibrant bazaars. It's a gateway to the Khyber Pass and has a diverse cultural heritage influenced by various civilizations.",
-    reactions: 2,
-    userId: "user-9",
-    tags: ["vacation", "Mumbai", "Enjoying"],
-  },
-
-  {
-    id: "9",
-    title: "Going To Peshawar",
-    body: "Peshawar is a historic city in Pakistan, known for its rich culture, ancient architecture, and vibrant bazaars. It's a gateway to the Khyber Pass and has a diverse cultural heritage influenced by various civilizations.",
-    reactions: 15,
-    userId: "user-12",
-    tags: ["Graduatiing", "Unbelieveable"],
-  },
-];
-
 const PostListProvider = ({ children }) => {
-  const [postList, dispatchPostList] = useReducer(postListReducer, values);
+  const [postList, dispatchPostList] = useReducer(postListReducer, []);
   const addPost = (userId, title, body, reactions, hashtag) => {
     dispatchPostList({
       type: "Add_Post",
@@ -50,6 +33,14 @@ const PostListProvider = ({ children }) => {
         reactions: reactions,
         userId: userId,
         tags: hashtag,
+      },
+    });
+  };
+  const addInitialPosts = (posts) => {
+    dispatchPostList({
+      type: "Add_Initial_Posts",
+      payload: {
+        posts,
       },
     });
   };
@@ -67,6 +58,7 @@ const PostListProvider = ({ children }) => {
       value={{
         postList,
         addPost,
+        addInitialPosts,
         deletePost,
       }}
     >
